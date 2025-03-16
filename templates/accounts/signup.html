@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #1e1e42, #29295a);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signup-container {
+            background: #2e2e6a;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: white;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px;
+            border: none;
+        }
+
+        .btn-signup {
+            background: #6c63ff;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .btn-signup:hover {
+            background: #534dff;
+        }
+
+        .login-link {
+            background: white;
+            color: #6c63ff;
+            padding: 10px;
+            display: inline-block;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="mt-4">
+    <p>{{form.errors}}</p>
+    <div class="signup-container mt-4">
+        <h3>Sign up</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        
+            <div class="mb-3">
+                {{ form.username }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.email }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.first_name }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.last_name }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.avatar }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.birth_date }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.password }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.password2 }}
+            </div>
+        
+            <div class="mb-3">
+                {{ form.recaptcha }}
+            </div>
+            <button type="submit" class="btn btn-signup mb-2">Sign up</button>
+        </form>
+        <a href="{% url 'login' %}" class="login-link">Login</a>
+    </div>
+</body>
+</html>
