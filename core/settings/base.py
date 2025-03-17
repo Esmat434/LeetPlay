@@ -13,14 +13,15 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
-
-ALLOWED_HOSTS = []
+MAINTENANCE_MODE = False
+ALLOWED_HOSTS = ["127.0.0.1",]
 
 
 # Application definition
 
 INSTALLED_APPS = [
     # django apps
+    "debug_toolbar",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -42,6 +44,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    "accounts.middlewares.RateLimiting.RateLimitingMiddleware",
+    "accounts.middlewares.MaintenanceMode.MaintenanceModeMiddleware",
+    "accounts.middlewares.AutoLogout.AutoLogoutMiddleware",
+    "accounts.middlewares.ExceptionHandling.ExceptionHandlingMiddleware",
+    "accounts.middlewares.Security.ScurityMiddleware"
 ]
 
 ROOT_URLCONF = 'core.urls'

@@ -153,4 +153,4 @@ class SetNewPasswordView(LogoutrequiredMixin,View):
         return render(request,'accounts/set_password.html',{'form':form})
 
 def index(request):
-    return HttpResponse("hello")
+    return HttpResponse()
