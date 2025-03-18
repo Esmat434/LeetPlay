@@ -24,5 +24,4 @@ urlpatterns = [
     path(
         "set-password/<uuid:token>/", SetNewPasswordView.as_view(), name="set-password"
     ),
-    path("", index, name="home"),
 ]

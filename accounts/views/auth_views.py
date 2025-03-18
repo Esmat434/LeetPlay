@@ -176,7 +176,3 @@ class SetNewPasswordView(LogoutrequiredMixin, View):
             return redirect(settings.LOGIN_URL)
         return render(request, "accounts/set_password.html", {"form": form})
 
-
-def index(request):
-    user = CustomUser.objects.all()
-    return HttpResponse({"data": user})
