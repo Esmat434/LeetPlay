@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpinMaster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .spin-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: red;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <header class="bg-white shadow p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">SpinMaster</h1>
+        <nav>
+            <ul class="flex gap-4">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'home' %}" class="text-red-600">Home</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                {% else %}
+                    <li><a href="{% url 'signup' %}">SignUp</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="flex flex-col items-center mt-10">
+        <h2 class="text-2xl font-semibold">Lucky Spin</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <select id="category" name="category" class="p-2 border rounded">
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+            </select>
+        
+            <select id="tag" name="tag" class="p-2 border rounded">
+                <option value="Array">Array</option>
+                <option value="Matrix">Matrix</option>
+                <option value="String">String</option>
+                <option value="Stack">Stack</option>
+                <option value="Queue">Queue</option>
+                <option value="LinkedList">Linked List</option>
+                <option value="Hash">Hash</option>
+                <option value="Tree">Tree</option>
+                <option value="BinaryTree">Binary Tree</option>
+                <option value="BinarySearchTree">BinarySearchTree</option>
+                <option value="Heap">Heap</option>
+                <option value="Graph">Graph</option>
+            </select>
+        
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
+        </form>
+
+        <div class="wheel-container mt-5">
+            <canvas id="wheel" width="300" height="300"></canvas>
+            {% if user.is_authenticated %}
+                <button id="spin-btn" class="spin-btn">Spin</button>
+            {% else %}
+                <input type="button" readonly class="spin-btn" value="Spin">
+            {% endif %}
+        </div>
+        <div id="result" class="mt-5 text-lg font-semibold text-blue-600"></div>
+    </main>
+
+    <footer class="bg-black text-white p-6 mt-10 text-center">
+        <p>&copy; 2025 SpinMaster. All Rights Reserved.</p>
+    </footer>
+    <script>
+        // Luky Spin Code
+        let questions = JSON.parse('{{ questions_json|safe }}');
+        let sectors = questions.map(q => q.title);
+        let colors = ["#FF5733", "#33FF57", "#5733FF", "#FF33A1", "#33FFF0", "#FFF233", "#F033FF", "#33A1FF"];
+
+        // مقداردهی متغیرهای مربوط به canvas
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+        const spinButton = document.getElementById("spin-btn");
+        const resultDiv = document.getElementById("result");
+
+        if (!ctx) {
+            console.error("Canvas context is not supported.");
+        }
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const numSectors = sectors.length;
+            const arc = (2 * Math.PI) / numSectors;
+
+            for (let i = 0; i < numSectors; i++) {
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 150, arc * i, arc * (i + 1));
+                ctx.lineTo(150, 150);
+                ctx.fill();
+
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 16px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(sectors[i], 150 + Math.cos(arc * (i + 0.5)) * 100, 150 + Math.sin(arc * (i + 0.5)) * 100);
+            }
+        }
+
+        function spinWheel() {
+            let randomDegree = 3600 + Math.random() * 360;
+            let duration = 4000;
+            let start = null;
+            let numSectors = sectors.length;  // مقداردهی متغیر برای جلوگیری از خطا
+
+            function animateWheel(timestamp) {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+                let easeOut = Math.min(progress / duration, 1);
+                let angle = easeOut * randomDegree;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(150, 150);
+                ctx.rotate(angle * Math.PI / 180);
+                ctx.translate(-150, -150);
+                drawWheel();
+                ctx.restore();
+
+                if (progress < duration) {
+                    requestAnimationFrame(animateWheel);
+                } else {
+                    let finalAngle = angle % 360;
+                    let sectorIndex = Math.floor((finalAngle / 360) * numSectors);
+                    let reward = sectors[sectorIndex];
+
+                    let rewardLink = questions[sectorIndex]?.link || "#";
+                    resultDiv.innerHTML = `🎉 شما برنده شدید: <a href="${rewardLink}" class="text-blue-600 underline">${reward}</a>`;
+                }
+            }
+            requestAnimationFrame(animateWheel);
+        }
+
+        drawWheel();
+        spinButton.addEventListener('click', spinWheel);
+    </script>
+</body>
+
+</html>

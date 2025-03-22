@@ -1,6 +1,5 @@
 from django.shortcuts import redirect
 from django.conf import settings
-from django.contrib.auth.mixins import *
 
 
 # this login required mixin check the auth token

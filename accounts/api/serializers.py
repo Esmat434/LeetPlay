@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from datetime import date, datetime
 from utils.validators import is_validate_birth_date, is_validate_password
 from accounts.models import Password_Token
 

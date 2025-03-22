@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django_recaptcha',
     # myapp
     'accounts',
+    'playground',
 ]
 
 MIDDLEWARE = [

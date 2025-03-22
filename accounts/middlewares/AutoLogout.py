@@ -16,7 +16,8 @@ class AutoLogoutMiddleware:
                 logout(request)
                 return JsonResponse({"error": "You logged out."}, status=401)
 
-        if request.path.startswith("/api/"):
+        methods = ['/api/signup/','/api/login/','/api/password-forgot/','/api/set-new-password/<uuid:token>/']
+        if request.path.startswith("/api/") and request.path not in methods:
             auth_header = request.headers.get("Authorization")
             if auth_header and auth_header.startswith("Bearer "):
                 token_key = auth_header.split(" ")[1]

@@ -6,8 +6,7 @@ from .auth_views import (
     LogoutView,
     ProfileView,
     PasswrdForgotView,
-    SetNewPasswordView,
-    index,
+    SetNewPasswordView
 )
 
 urlpatterns = [
