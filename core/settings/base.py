@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     # django apps
     "debug_toolbar",
     "silk",
+    'django.contrib.sitemaps',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
