@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="fa">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SpinMaster</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .wheel-container {
             position: relative;
@@ -73,8 +71,11 @@
                 <option value="Heap">Heap</option>
                 <option value="Graph">Graph</option>
             </select>
-        
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
+            {% if request.user.is_authenticated %}
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
+            {% else %}
+                <input type="button" readonly class="bg-blue-500 text-white px-4 py-2 rounded" value="Filter">
+            {% endif %}
         </form>
 
         <div class="wheel-container mt-5">
@@ -91,6 +92,7 @@
     <footer class="bg-black text-white p-6 mt-10 text-center">
         <p>&copy; 2025 SpinMaster. All Rights Reserved.</p>
     </footer>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Luky Spin Code
         let questions = JSON.parse('{{ questions_json|safe }}');
